@@ -6,6 +6,7 @@ class MainBase(models.Model):
     brand_name = models.CharField(max_length=250)
     goods_name = models.CharField(max_length=250)
     img = models.CharField(max_length=250)
+    url = models.CharField(max_length=250)
     price_now = models.IntegerField(blank=None)
     price_min = models.IntegerField(blank=None)
     price_max = models.IntegerField(blank=None)
@@ -13,4 +14,5 @@ class MainBase(models.Model):
     b_count = models.IntegerField(default=0)
     stars = models.IntegerField(default=0)
     flag = models.BooleanField()
-    company_name = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=50)
+    updated_time = '?'
