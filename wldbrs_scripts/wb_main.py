@@ -11,8 +11,9 @@ from bs4 import BeautifulSoup
 
 class WildBerries:
 
-    def __init__(self, db, api_token, chat_name, company_name, p1, p2, p3, categories):
+    def __init__(self, db, base_name, api_token, chat_name, company_name, p1, p2, p3, categories):
         self.db = db
+        self.base_name = base_name
         self.conn = sqlite3.connect(db)
         self.cursor = self.conn.cursor()
         self.api_token = api_token
@@ -24,13 +25,13 @@ class WildBerries:
         self.categories = categories
 
     def db_work(self, id_number, brand_name, goods_name, img, url, price_now, b_count, stars, flag=True):
-        self.cursor.execute(f"SELECT ID FROM main_table WHERE ID={id_number};")
+        self.cursor.execute(f"SELECT ID FROM {self.base_name} WHERE ID={id_number};")
         if self.cursor.fetchall() == []:
             self.cursor.execute(
-                f"INSERT INTO main_table VALUES ({id_number},'{brand_name}','{goods_name}','{img}','{url}',{price_now},{price_now},{price_now}, 0);")
+                f"INSERT INTO {self.base_name} VALUES ({id_number},'{brand_name}','{goods_name}','{img}','{url}',{price_now},{price_now},{price_now}, 0);")
             self.conn.commit()
         else:
-            self.cursor.execute(f"SELECT PRICE_NOW, PRICE_MIN, PRICE_MAX, TIMER FROM main_table WHERE ID={id_number};")
+            self.cursor.execute(f"SELECT PRICE_NOW, PRICE_MIN, PRICE_MAX, TIMER FROM {self.base_name} WHERE ID={id_number};")
             prices = self.cursor.fetchall()[0]
             now_price = prices[0]
             min_price = prices[1]
@@ -39,18 +40,18 @@ class WildBerries:
             if price_now < now_price and price_now < min_price:
                 prcnt = 100 - int(round(((price_now * 100) / now_price), 0))
                 self.cursor.execute(
-                    f"UPDATE main_table SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ID={id_number}")
+                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ID={id_number}")
                 if flag:
                     self.notification(prcnt, brand_name, goods_name, img, url, price_now, now_price, min_price,
                                       max_price,
                                       b_count, stars)
                 self.conn.commit()
-                self.cursor.execute(f"UPDATE main_table SET PRICE_MIN={price_now} WHERE ID={id_number}")
+                self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MIN={price_now} WHERE ID={id_number}")
                 self.conn.commit()
             elif price_now < now_price and price_now >= min_price:
                 prcnt = 100 - int(round(((price_now * 100) / now_price), 0))
                 self.cursor.execute(
-                    f"UPDATE main_table SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ID={id_number}")
+                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ID={id_number}")
                 if flag and (ceil(time.time()) - timer) > 864000:
                     self.notification(prcnt, brand_name, goods_name, img, url, price_now, now_price, min_price,
                                       max_price,
@@ -58,10 +59,10 @@ class WildBerries:
                 self.conn.commit()
             elif price_now > now_price:
                 self.cursor.execute(
-                    f"UPDATE main_table SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}' WHERE ID={id_number}")
+                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}' WHERE ID={id_number}")
                 self.conn.commit()
                 if price_now > max_price:
-                    self.cursor.execute(f"UPDATE main_table SET PRICE_MAX={price_now} WHERE ID={id_number}")
+                    self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MAX={price_now} WHERE ID={id_number}")
                     self.conn.commit()
 
     def notification(self,

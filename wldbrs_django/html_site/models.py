@@ -13,4 +13,4 @@ class MainBase(models.Model):
     b_count = models.IntegerField(default=0)
     stars = models.IntegerField(default=0)
     flag = models.BooleanField()
-    sitename = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=100)
