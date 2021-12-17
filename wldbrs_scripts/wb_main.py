@@ -24,45 +24,45 @@ class WildBerries:
         self.p3 = p3
         self.categories = categories
 
-    def db_work(self, id_number, brand_name, goods_name, img, url, price_now, b_count, stars, flag=True):
-        self.cursor.execute(f"SELECT ID FROM {self.base_name} WHERE ID={id_number};")
+    def db_work(self, item_id, brand_name, goods_name, img, url, price_now, b_count, stars, flag=True):
+        self.cursor.execute(f"SELECT ITEM_ID FROM {self.base_name} WHERE ITEM_ID={item_id};")
         if self.cursor.fetchall() == []:
             self.cursor.execute(
-                f"INSERT INTO {self.base_name} VALUES ({id_number},'{brand_name}','{goods_name}','{img}','{url}',{price_now},{price_now},{price_now}, 0);")
+                f"INSERT INTO {self.base_name} VALUES ({item_id},'{brand_name}','{goods_name}','{img}','{url}',{price_now},{price_now},{price_now}, 0);")
             self.conn.commit()
         else:
-            self.cursor.execute(f"SELECT PRICE_NOW, PRICE_MIN, PRICE_MAX, TIMER FROM {self.base_name} WHERE ID={id_number};")
+            self.cursor.execute(f"SELECT PRICE_NOW, PRICE_MIN, PRICE_MAX, TIMER FROM {self.base_name} WHERE ITEM_ID={item_id};")
             prices = self.cursor.fetchall()[0]
-            now_price = prices[0]
+            price_prev = prices[0]
             min_price = prices[1]
             max_price = prices[2]
             timer = prices[3]
-            if price_now < now_price and price_now < min_price:
-                prcnt = 100 - int(round(((price_now * 100) / now_price), 0))
+            if price_now < price_prev and price_now < min_price:
+                prcnt = 100 - int(round(((price_now * 100) / price_prev), 0))
                 self.cursor.execute(
-                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ID={id_number}")
+                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ITEM_ID={item_id}")
                 if flag:
-                    self.notification(prcnt, brand_name, goods_name, img, url, price_now, now_price, min_price,
+                    self.notification(prcnt, brand_name, goods_name, img, url, price_now, price_prev, min_price,
                                       max_price,
                                       b_count, stars)
                 self.conn.commit()
-                self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MIN={price_now} WHERE ID={id_number}")
+                self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MIN={price_now} WHERE ITEM_ID={item_id}")
                 self.conn.commit()
-            elif price_now < now_price and price_now >= min_price:
-                prcnt = 100 - int(round(((price_now * 100) / now_price), 0))
+            elif price_now < price_prev and price_now >= min_price:
+                prcnt = 100 - int(round(((price_now * 100) / price_prev), 0))
                 self.cursor.execute(
-                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ID={id_number}")
+                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ITEM_ID={item_id}")
                 if flag and (ceil(time.time()) - timer) > 864000:
-                    self.notification(prcnt, brand_name, goods_name, img, url, price_now, now_price, min_price,
+                    self.notification(prcnt, brand_name, goods_name, img, url, price_now, price_prev, min_price,
                                       max_price,
                                       b_count, stars)
                 self.conn.commit()
-            elif price_now > now_price:
+            elif price_now > price_prev:
                 self.cursor.execute(
-                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}' WHERE ID={id_number}")
+                    f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}' WHERE ITEM_ID={item_id}")
                 self.conn.commit()
                 if price_now > max_price:
-                    self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MAX={price_now} WHERE ID={id_number}")
+                    self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MAX={price_now} WHERE ITEM_ID={item_id}")
                     self.conn.commit()
 
     def notification(self,
@@ -72,14 +72,14 @@ class WildBerries:
                      img,
                      url,
                      price_now,
-                     now_price,
+                     price_prev,
                      min_price,
                      max_price,
                      b_count,
                      stars):
         if (0 < price_now <= 500 and prcnt > self.p1) or (501 < price_now <= 1000 and prcnt > self.p2) or (
                 1001 < price_now and prcnt > self.p3):
-            print(f'Товар:  {brand_name} / {goods_name} уменьшился в цене c {now_price} до {price_now} (-{prcnt}%)')
+            print(f'Товар:  {brand_name} / {goods_name} уменьшился в цене c {price_prev} до {price_now} (-{prcnt}%)')
             print(f'Ссылка: {url}')
             print(f'Картинка: {img}')
             requests.get(f'https://api.telegram.org/bot{self.api_token}/sendMessage', params=dict(
@@ -87,7 +87,7 @@ class WildBerries:
                 chat_id=self.chat_name,
                 text=f'{self.company_name}\n<a href="{img}">&#8205;</a>\n'
                      f'<a href="{url}">{brand_name} / {goods_name}</a>\n\n'
-                     f'{now_price}р -> {price_now}р <b>(-{prcnt}%)</b>\n\n'
+                     f'{price_prev}р -> {price_now}р <b>(-{prcnt}%)</b>\n\n'
                      f'Амплитуда: от {min_price}р до {max_price}р\n\n'
                      f'{emoji.emojize(":full_moon:") * stars}{emoji.emojize(":new_moon:") * (5 - stars)} {b_count}'))
 
@@ -100,7 +100,7 @@ class WildBerries:
         for i in quotes:
             id_tmp = i.find(class_='product-card__main j-open-full-product-card').get('href')
             id_tmp2 = [m.start() for m in re.finditer('/', id_tmp)]
-            id_number = int(id_tmp[id_tmp2[1] + 1:id_tmp2[2]])
+            item_id = int(id_tmp[id_tmp2[1] + 1:id_tmp2[2]])
             brand_name = i.find('strong', class_="brand-name").text[:-2].strip().replace("'", "`").replace('"', '`')
             goods_name = i.find('span', class_="goods-name").text.strip().replace("'", "`").replace('"', '`')
             if i.find('span', class_='lower-price') is None:
@@ -108,7 +108,7 @@ class WildBerries:
             else:
                 price_now = int(''.join(j for j in i.find('span', class_='lower-price').text if j.isdigit()))
             # price_now = int(''.join(j for j in i.find('span', class_='price-commission__current-price').text if j.isdigit()))
-            url = f'https://www.wildberries.ru/catalog/{id_number}/detail.aspx'
+            url = f'https://www.wildberries.ru/catalog/{item_id}/detail.aspx'
             img_temp1 = i.find(class_='j-thumbnail thumbnail').get('data-original')
             img_temp2 = i.find(class_='j-thumbnail thumbnail').get('src')
             img = f'https:{img_temp1}' if img_temp1 else f'https:{img_temp2}'
@@ -122,7 +122,7 @@ class WildBerries:
                 stars = int(re.findall(r'star\d', str(i))[0][-1])
             flag = False if i.find('ins',
                                    title='Новый товар, поступил в продажу менее 14 дней назад') is not None else True
-            self.db_work(id_number,
+            self.db_work(item_id,
                          brand_name,
                          goods_name,
                          img,
@@ -143,7 +143,7 @@ class WildBerries:
                         page = pages + str(i)
                         print(str(datetime.now())[:-7], page)
                         page_cheker = self.get_data_100(page)
-                        time.sleep(5)
+                        # time.sleep(5)
                         if page_cheker is None:
                             print('!')
                             break
