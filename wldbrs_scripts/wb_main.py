@@ -7,11 +7,11 @@ from math import ceil
 import emoji
 import requests
 from bs4 import BeautifulSoup
-
+# from mysql_to_site import *
 
 class WildBerries:
 
-    def __init__(self, db, base_name, api_token, chat_name, company_name, p1, p2, p3, categories):
+    def __init__(self, db, base_name, api_token, chat_name, company_name, product_type, p1, p2, p3, categories):
         self.db = db
         self.base_name = base_name
         self.conn = sqlite3.connect(db)
@@ -19,6 +19,7 @@ class WildBerries:
         self.api_token = api_token
         self.chat_name = chat_name
         self.company_name = company_name
+        self.product_type = product_type
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3

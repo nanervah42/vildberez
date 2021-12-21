@@ -2,10 +2,10 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic import ListView
-from .models import MainBase
+from .models import wb_base
 
 class HomeIndex(ListView):   # вместо index
-    model = MainBase        # определяем модель откуда беруться все данные
+    model = wb_base        # определяем модель откуда беруться все данные
     template_name = 'wldbrs_django/index.html'   # переопределяем дефолтное название шаблона
     context_object_name = 'wldbrs'        # переопределяемn дефолтное название объекта
     # paginate_by = 2

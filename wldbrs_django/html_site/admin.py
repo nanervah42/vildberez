@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import MainBase
+from .models import wb_base
 
-admin.site.register(MainBase)
+admin.site.register(wb_base)

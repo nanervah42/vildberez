@@ -2,9 +2,11 @@ from wb_main import *
 
 wb_shoes_m = WildBerries(
     'wb.db',
+    'main_table',
     '1766208194:AAHCAkJ8Yq3tEvXk_dBQzIVY-egKI8YH97U',
     '@WSS_shoes_m',
-    'Wildberries',
+    'wildberries',
+    'shoes_m',
     40,
     35,
     35,
