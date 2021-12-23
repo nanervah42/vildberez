@@ -1,5 +1,6 @@
 from wb_main import *
 
+
 wb_shoes_m = WildBerries(
     'wb.db',
     'main_table',

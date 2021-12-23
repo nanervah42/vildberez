@@ -77,4 +77,4 @@ def add_on_site(item_id, brand_name, goods_name, img, url, price_now, price_prev
         print('Updating...')
 
 
-add_on_site(114, 'brand', 'goods', 'www.img.ru', 'www.url.ru', 100, 110, 50, 200, 555, 4, 'wildberries', 'shoes_m')
+# add_on_site(114, 'brand', 'goods', 'www.img.ru', 'www.url.ru', 100, 110, 50, 200, 555, 4, 'wildberries', 'shoes_m')

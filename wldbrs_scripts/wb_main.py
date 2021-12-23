@@ -7,7 +7,8 @@ from math import ceil
 import emoji
 import requests
 from bs4 import BeautifulSoup
-# from mysql_to_site import *
+from mysql_to_site import *
+
 
 class WildBerries:
 
@@ -43,9 +44,8 @@ class WildBerries:
                 self.cursor.execute(
                     f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ITEM_ID={item_id}")
                 if flag:
-                    self.notification(prcnt, brand_name, goods_name, img, url, price_now, price_prev, min_price,
-                                      max_price,
-                                      b_count, stars)
+                    self.notification(item_id, prcnt, brand_name, goods_name, img, url, price_now, price_prev, min_price,
+                                      max_price, b_count, stars)
                 self.conn.commit()
                 self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MIN={price_now} WHERE ITEM_ID={item_id}")
                 self.conn.commit()
@@ -54,9 +54,8 @@ class WildBerries:
                 self.cursor.execute(
                     f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ITEM_ID={item_id}")
                 if flag and (ceil(time.time()) - timer) > 864000:
-                    self.notification(prcnt, brand_name, goods_name, img, url, price_now, price_prev, min_price,
-                                      max_price,
-                                      b_count, stars)
+                    self.notification(item_id, prcnt, brand_name, goods_name, img, url, price_now, price_prev, min_price,
+                                      max_price, b_count, stars)
                 self.conn.commit()
             elif price_now > price_prev:
                 self.cursor.execute(
@@ -67,6 +66,7 @@ class WildBerries:
                     self.conn.commit()
 
     def notification(self,
+                     item_id,
                      prcnt,
                      brand_name,
                      goods_name,
@@ -91,6 +91,12 @@ class WildBerries:
                      f'{price_prev}р -> {price_now}р <b>(-{prcnt}%)</b>\n\n'
                      f'Амплитуда: от {min_price}р до {max_price}р\n\n'
                      f'{emoji.emojize(":full_moon:") * stars}{emoji.emojize(":new_moon:") * (5 - stars)} {b_count}'))
+            try:
+                add_on_site(item_id, brand_name, goods_name, img, url, price_now, price_prev, min_price, max_price,
+                        b_count, stars, self.company_name, self.product_type)
+            except:
+                print('Ошибка SQL. Запрос не выполнен.')
+
 
     def get_data_100(self, lnk):
         HEADERS = {
@@ -116,7 +122,7 @@ class WildBerries:
             if i.find('span', class_='product-card__count') is None:
                 b_count = 0
             else:
-                b_count = i.find('span', class_='product-card__count').text
+                b_count = int(''.join(j for j in i.find('span', class_='product-card__count').text if j.isdigit()))
             if re.findall(r'star\d', str(i)) == []:
                 stars = 0
             else:
