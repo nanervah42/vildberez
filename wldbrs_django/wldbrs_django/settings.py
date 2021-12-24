@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'html_site.apps.HtmlSiteConfig'
+    'html_site.apps.HtmlSiteConfig',
+    'html_site.templatetags'
 ]
 
 MIDDLEWARE = [
@@ -113,6 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 LANGUAGE_CODE = 'ru-ru'
 

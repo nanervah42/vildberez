@@ -1,4 +1,5 @@
 {% load static %}
+{% load my_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +32,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,600italic,700,700italic,800'
           rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../../../wldbrs_django/static/css/main.css">
 </head>
 <body>
 
@@ -116,6 +118,9 @@
                         <ul class="nav">
 
                             <li class="dropdown menu-item"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                </i>Все категории</a></li>
+
+                            <li class="dropdown menu-item"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 </i>Мужская верхняя одежда</a></li>
 
                             <li class="dropdown menu-item"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -139,12 +144,14 @@
                         <div class="text-right">
                             <div class="pagination-container">
                                 <ul class="list-inline list-unstyled">
+                                    <li class="prev"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
                                     <li class="prev"><a href="#"><i class="fa fa-angle-left"></i></a></li>
                                     <li><a href="#">1</a></li>
                                     <li class="active"><a href="#">2</a></li>
                                     <li><a href="#">3</a></li>
                                     <li><a href="#">4</a></li>
                                     <li class="next"><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                                    <li class="next"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
                                 </ul>
                                 <!-- /.list-inline -->
                             </div>
@@ -156,116 +163,28 @@
                         <div class="tab-pane active " id="grid-container">
                             <div class="category-product">
                                 <div class="row">
-                                    <div class="col-sm-6 col-md-4 wow fadeInUp">
-                                        <div class="products">
-                                            <div class="product">
-                                                <div class="product-image">
-                                                    <div class="image"><a href="#"><img
-                                                            src="https://images.wbstatic.net/c516x688/new/17320000/17327067-1.jpg" alt=""></a></div>
-                                                </div>
-                                                <div class="product-info text-left">
-                                                    <h3 class="name"><a href="#">11Floral Print Buttoned</a>
-                                                    </h3>
-                                                    <div class="small-ratings"> <i class="fa fa-star rating-color"></i> <i class="fa fa-star rating-color"></i> <i class="fa fa-star rating-color"></i> <i class="fa fa-star"></i></i></div>
-                                                    <div class="description"></div>
-                                                    <div class="product-price"><span class="price"> 450.99 руб </span>
-                                                        <span class="price-before-discount">800 руб </span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-4 wow fadeInUp">
-                                        <div class="products">
-                                            <div class="product">
-                                                <div class="product-image">
-                                                    <div class="image"><a href="detail.html"><img
-                                                            src="https://images.wbstatic.net/c516x688/new/30300000/30300928-1.jpg" alt=""></a></div>
-                                                </div>
-                                                <div class="product-info text-left">
-                                                    <h3 class="name"><a href="detail.html">Floral Print Buttoned</a>
-                                                    </h3>
-                                                    <div class="rating rateit-small"></div>
 
-
-                                                    <div class="description"></div>
-                                                    <div class="product-price"><span class="price"> $450.99 </span>
-                                                        <span class="price-before-discount">$ 800</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% for item in wldbrs %}
                                     <div class="col-sm-6 col-md-4 wow fadeInUp">
                                         <div class="products">
                                             <div class="product">
                                                 <div class="product-image">
-                                                    <div class="image"><a href="detail.html"><img
-                                                            src="https://images.wbstatic.net/c516x688/new/17940000/17944616-1.jpg" alt=""></a></div>
+                                                    <div class="image"><a href="{{ item.url }}" target="_blank"><img
+                                                            src="{{ item.img }}" alt=""></a></div>
                                                 </div>
                                                 <div class="product-info text-left">
-                                                    <h3 class="name"><a href="detail.html">Floral Print Buttoned</a>
-                                                    </h3>
-                                                    <div class="rating rateit-small"></div>
-                                                    <div class="description"></div>
-                                                    <div class="product-price"><span class="price"> $450.99 </span>
-                                                        <span class="price-before-discount">$ 800</span></div>
+                                                    <h3 class="name"><a href="{{ item.url }}" target="_blank">{{ item.brand_name }}</a></h3>
+                                                    <h3 class="name"><a href="{{ item.url }}" target="_blank">{{ item.goods_name }}</a></h3>
+                                                    <div class="small-ratings">{% for i in item.stars|times %}<i class="fa fa-star rating-color"></i>{% endfor %} ({{ item.b_count }})</div>
+                                                    <div class="description">{{ item.updated_time | date:"d-m H:i:s" }}</div>
+                                                    <div class="description">{{ item.updated_time | timeuntil }}</div>
+                                                    <div class="product-price"><span class="price"> {{ item.price_now }} руб </span>
+                                                        <span class="price-before-discount">{{ item.price_prev }} руб </span></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-4 wow fadeInUp">
-                                        <div class="products">
-                                            <div class="product">
-                                                <div class="product-image">
-                                                    <div class="image"><a href="detail.html"><img
-                                                            src="https://images.wbstatic.net/c516x688/new/13220000/13227078-1.jpg" alt=""></a></div>
-                                                </div>
-                                                <div class="product-info text-left">
-                                                    <h3 class="name"><a href="detail.html">Floral Print Buttoned</a>
-                                                    </h3>
-                                                    <div class="rating rateit-small"></div>
-                                                    <div class="description"></div>
-                                                    <div class="product-price"><span class="price"> $450.99 </span>
-                                                        <span class="price-before-discount">$ 800</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-4 wow fadeInUp">
-                                        <div class="products">
-                                            <div class="product">
-                                                <div class="product-image">
-                                                    <div class="image"><a href="detail.html"><img
-                                                            src="https://images.wbstatic.net/c516x688/new/13220000/13227069-1.jpg" alt=""></a></div>
-                                                </div>
-                                                <div class="product-info text-left">
-                                                    <h3 class="name"><a href="detail.html">Floral Print Buttoned</a>
-                                                    </h3>
-                                                    <div class="rating rateit-small"></div>
-                                                    <div class="description"></div>
-                                                    <div class="product-price"><span class="price"> $450.99 </span>
-                                                        <span class="price-before-discount">$ 800</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-4 wow fadeInUp">
-                                        <div class="products">
-                                            <div class="product">
-                                                <div class="product-image">
-                                                    <div class="image"><a href="detail.html"><img
-                                                            src="https://images.wbstatic.net/c516x688/new/14190000/14190474-1.jpg" alt=""></a></div>
-                                                </div>
-                                                <div class="product-info text-left">
-                                                    <h3 class="name"><a href="detail.html">Floral Print Buttoned</a>
-                                                    </h3>
-                                                    <div class="rating rateit-small"></div>
-                                                    <div class="description"></div>
-                                                    <div class="product-price"><span class="price"> $450.99 </span>
-                                                        <span class="price-before-discount">$ 800</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

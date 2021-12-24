@@ -15,5 +15,5 @@ class HomeIndex(ListView):   # вместо index
         context['title'] = 'Главная страница'                   # дополняем его
         return context
 
-    # def get_queryset(self):     # правим дефолтный запрос который ~ SELECT все поля FROM таблица, без всяких условий
-        # return News.objects.filter(is_published=True).select_related('category')   # select_related для уменьшения sql запросов(тема в дебаг тулз)
+    def get_queryset(self):     # правим дефолтный запрос который ~ SELECT все поля FROM таблица, без всяких условий
+        return wb_base.objects.all().order_by('-updated_time')
