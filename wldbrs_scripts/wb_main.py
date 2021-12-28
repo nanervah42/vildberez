@@ -12,7 +12,7 @@ from mysql_to_site import *
 
 class WildBerries:
 
-    def __init__(self, db, base_name, api_token, chat_name, company_name, product_type, p1, p2, p3, categories):
+    def __init__(self, db, base_name, api_token, chat_name, company_name, product_type, product_type_name, p1, p2, p3, categories):
         self.db = db
         self.base_name = base_name
         self.conn = sqlite3.connect(db)
@@ -21,6 +21,7 @@ class WildBerries:
         self.chat_name = chat_name
         self.company_name = company_name
         self.product_type = product_type
+        self.product_type_name = product_type_name
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
@@ -93,7 +94,7 @@ class WildBerries:
                      f'{emoji.emojize(":full_moon:") * stars}{emoji.emojize(":new_moon:") * (5 - stars)} {b_count}'))
             try:
                 add_on_site(item_id, brand_name, goods_name, img, url, price_now, price_prev, min_price, max_price,
-                        b_count, stars, self.company_name, self.product_type)
+                        b_count, stars, self.company_name, self.product_type, self.product_type_name)
             except:
                 print('Ошибка SQL. Запрос не выполнен.')
 

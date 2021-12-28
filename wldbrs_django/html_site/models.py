@@ -15,6 +15,7 @@ class wb_base(models.Model):
     stars = models.IntegerField(default=0)
     company_name = models.CharField(max_length=50)
     product_type = models.CharField(max_length=50)
+    product_type_name = models.CharField(max_length=50)
     updated_time = models.DateTimeField(auto_now=True)
 
     class Meta:
