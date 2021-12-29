@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.views.generic import ListView, TemplateView
 from .models import wb_base
 
@@ -40,6 +37,7 @@ class Category(ListView):
         context['products'] = wb_base.objects.values('product_type', 'product_type_name').order_by('product_type_name',
                                                                                     ).distinct()
         context['breadcrumb'] = self.breadcrumb(self.kwargs, context['products'])
+
         return context
 
     def get_queryset(self):  # правим дефолтный запрос который ~ SELECT все поля FROM таблица, без всяких условий

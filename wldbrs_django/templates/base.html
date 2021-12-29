@@ -1,5 +1,4 @@
 {% load static %}
-{% load my_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,23 +60,29 @@
                         <div class="navbar-collapse collapse" id="mc-horizontal-menu-collapse">
                             <div class="nav-outer">
                                 <ul class="nav navbar-nav">
-                                    <li class="active dropdown yamm-fw"><a href="/" data-hover="dropdown"
-                                                                           class="dropdown-toggle">Главная страница</a></li>
-                                    <li class="dropdown yamm mega-menu"><a href="{% url 'telegram' %}" data-hover="dropdown"
-                                                                           class="dropdown-toggle">Telegram каналы</a></li>
-                                    <li class="dropdown yamm mega-menu"><a href="{% url 'about' %}" data-hover="dropdown"
-                                                                           class="dropdown-toggle">О проекте</a></li>
-<!--                                    <li class="dropdown mega-menu"><a href="#" data-hover="dropdown"-->
-<!--                                                                      class="dropdown-toggle" data-toggle="dropdown">Electronics</a>-->
-<!--                                    </li>-->
-<!--                                    <li class="dropdown hidden-sm"><a href="#">Health & Beauty</a></li>-->
-<!--                                    <li class="dropdown hidden-sm"><a href="#">Watches</a></li>-->
-<!--                                    <li class="dropdown"><a href="#">Jewellery</a></li>-->
-<!--                                    <li class="dropdown"><a href="#">Shoes</a></li>-->
-<!--                                    <li class="dropdown"><a href="#">Kids & Girls</a></li>-->
-<!--                                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-hover="dropdown"-->
-<!--                                                            data-toggle="dropdown">Pages</a>-->
-<!--                                    </li>-->
+                                    {% with request.resolver_match.url_name as url_name %}
+                                    <li class="{% if url_name == 'home' or url_name == 'category' %}active{% endif %} dropdown yamm-fw"><a
+                                            href="{% url 'home' %}" data-hover="dropdown"
+                                            class="dropdown-toggle">Главная страница</a></li>
+                                    <li class="{% if url_name == 'telegram' %}active{% endif %} dropdown yamm"><a
+                                            href="{% url 'telegram' %}" data-hover="dropdown"
+                                            class="dropdown-toggle">Telegram каналы</a></li>
+                                    <li class="{% if url_name == 'about' %}active{% endif %} dropdown yamm"><a
+                                            href="{% url 'about' %}"
+                                            data-hover="dropdown"
+                                            class="dropdown-toggle">О проекте</a></li>
+                                    {% endwith %}
+                                    <!--                                    <li class="dropdown mega-menu"><a href="#" data-hover="dropdown"-->
+                                    <!--                                                                      class="dropdown-toggle" data-toggle="dropdown">Electronics</a>-->
+                                    <!--                                    </li>-->
+                                    <!--                                    <li class="dropdown hidden-sm"><a href="#">Health & Beauty</a></li>-->
+                                    <!--                                    <li class="dropdown hidden-sm"><a href="#">Watches</a></li>-->
+                                    <!--                                    <li class="dropdown"><a href="#">Jewellery</a></li>-->
+                                    <!--                                    <li class="dropdown"><a href="#">Shoes</a></li>-->
+                                    <!--                                    <li class="dropdown"><a href="#">Kids & Girls</a></li>-->
+                                    <!--                                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-hover="dropdown"-->
+                                    <!--                                                            data-toggle="dropdown">Pages</a>-->
+                                    <!--                                    </li>-->
 
                                 </ul>
                             </div>
