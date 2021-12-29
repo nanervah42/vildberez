@@ -1,0 +1,17 @@
+<div class='col-md-3 sidebar'>
+    <div class="side-menu animate-dropdown outer-bottom-xs">
+        <div class="head"><i class="icon fa fa-align-justify fa-fw"></i>Категории</div>
+        <nav class="yamm megamenu-horizontal">
+            <ul class="nav">
+                <li class="dropdown menu-item"><a href="/" class="dropdown-toggle">
+                    </i>Все категории</a></li>
+
+                {% for item in products %}
+                <li class="dropdown menu-item"><a href="/category/{{ item.product_type }}/" class="dropdown-toggle">
+                    </i>{{ item.product_type_name }}</a></li>
+                {% endfor %}
+
+            </ul>
+        </nav>
+    </div>
+</div>
