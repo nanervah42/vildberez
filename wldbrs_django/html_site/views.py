@@ -21,3 +21,18 @@ class HomeIndex(ListView):  # вместо index
 
     def get_queryset(self):  # правим дефолтный запрос который ~ SELECT все поля FROM таблица, без всяких условий
         return wb_base.objects.all().order_by('-updated_time')
+
+class Category(ListView):
+    model = wb_base
+    template_name = 'wldbrs_django/index.html'
+    context_object_name = 'wldbrs'
+
+    def get_context_data(self, *, object_list=None, **kwargs):  # ...для динамичных данных
+        context = super().get_context_data(**kwargs)  # получаем контекст, который уже есть
+        context['title'] = 'Главная страница'  # дополняем его
+        context['products'] = wb_base.objects.values('product_type', 'product_type_name').order_by('product_type_name',
+                                                                                    ).distinct()
+        return context
+
+    def get_queryset(self):  # правим дефолтный запрос который ~ SELECT все поля FROM таблица, без всяких условий
+        return wb_base.objects.filter(product_type=self.kwargs['product_type']).order_by('-updated_time')

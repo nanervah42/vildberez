@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-3 logo-holder">
                     <!-- ============================================================= LOGO ============================================================= -->
-                    <div class="logo"><a href="\"> <img src="{% static 'images/logo2.png' %}" alt=""> </a></div>
+                    <div class="logo"><a href="/"> <img src="{% static 'images/logo2.png' %}" alt=""> </a></div>
                     <!-- ============================================================= LOGO : END ============================================================= -->
                 </div>
             </div>
@@ -117,11 +117,11 @@
                     <nav class="yamm megamenu-horizontal">
                         <ul class="nav">
 
-                            <li class="dropdown menu-item"><a href="\" class="dropdown-toggle">
+                            <li class="dropdown menu-item"><a href="/" class="dropdown-toggle">
                                 </i>Все категории</a></li>
 
                             {% for item in products %}
-                            <li class="dropdown menu-item"><a href="{{ item.product_type }}" class="dropdown-toggle">
+                            <li class="dropdown menu-item"><a href="/category/{{ item.product_type }}/" class="dropdown-toggle">
                                 </i>{{ item.product_type_name }}</a></li>
                             {% endfor %}
 
