@@ -13,7 +13,7 @@ class HomeIndex(ListView):  # вместо index
 
     def get_context_data(self, *, object_list=None, **kwargs):  # ...для динамичных данных
         context = super().get_context_data(**kwargs)  # получаем контекст, который уже есть
-        context['title'] = 'Главная страница'  # дополняем его
+        context['title'] = 'Тайтл придумать'  # дополняем его
         context['products'] = wb_base.objects.values('product_type', 'product_type_name').order_by('product_type_name',
                                                                                     ).distinct()
         return context
@@ -28,28 +28,22 @@ class Category(ListView):
     context_object_name = 'wldbrs'
     paginate_by = 3
 
+
+    def breadcrumb(self, value, iter):
+        for i in iter:
+            if i['product_type'] == value['product_type']:
+                return i['product_type_name']
+
     def get_context_data(self, *, object_list=None, **kwargs):  # ...для динамичных данных
         context = super().get_context_data(**kwargs)  # получаем контекст, который уже есть
-        context['title'] = 'Главная страница'  # дополняем его
+        context['title'] = 'Придумать тайтл'  # дополняем его
         context['products'] = wb_base.objects.values('product_type', 'product_type_name').order_by('product_type_name',
                                                                                     ).distinct()
+        context['breadcrumb'] = self.breadcrumb(self.kwargs, context['products'])
         return context
 
     def get_queryset(self):  # правим дефолтный запрос который ~ SELECT все поля FROM таблица, без всяких условий
         return wb_base.objects.filter(product_type=self.kwargs['product_type']).order_by('-updated_time')
-
-
-# class Telegram(ListView):
-#     model = wb_base
-#     template_name = 'wldbrs_django/telegram.html'
-#     context_object_name = 'wldbrs'
-#     paginate_by = 3
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):  # ...для динамичных данных
-#         context = super().get_context_data(**kwargs)  # получаем контекст, который уже есть
-#         context['title'] = 'Главная страница'  # дополняем его
-#
-#         return context
 
 
 class Telegram(TemplateView):
