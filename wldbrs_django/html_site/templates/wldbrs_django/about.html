@@ -5,6 +5,7 @@
     {{ title }}
 {% endblock %}
 
+
 {% block content %}
 <div class="body-content">
     <div class="container">
@@ -13,20 +14,39 @@
                 <div class="col-md-12 terms-conditions">
                     <h2 class="heading-title">О проекте</h2>
                     <div class="">
-                        <!--                        <h3>Termination</h3>-->
-                        <!--                        <h3>Changes to this agreement</h3>-->
                         <p>На данном сайте, с небольшой задержкой, отслеживается изменение цен на определенные
                             категории
                             товаров на wildberries.</p>
                         <p>Проект учебный, но если будет интерес, буду поддерживать его работоспособность.</p>
                         <br>
-                        <p>Пожелания (по дополнительным категориям) и предложения по улучшению присылайте на
-                            asdf@asdf.ru</p>
-                        <!--                        <h3>По вопросам</h3>-->
-                        <p>If you have any questions about this Agreement, please contact us filling this <a href="#"
-                                                                                                             class='contact-form'>contact
-                            form</a></p>
+                        <p>Пожелания (по дополнительным категориям) и предложения по улучшению оставляйте в форме ниже:</p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-page">
+            <div class="row">
+                <div class="col-md-12 contact-form">
+                    <form action="{% url 'feedback' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="info-title">Тема</label>
+                                <input name="subject" class="form-control unicase-form-control text-input">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="info-title">Сообщение</label>
+                                <textarea name="message" class="form-control unicase-form-control text-input"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12 outer-bottom-small m-t-20">
+                            <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Отправить
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

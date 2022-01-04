@@ -2,7 +2,11 @@
 {% load my_filters %}
 
 {% block title %}
-    {{ title }}
+    {% if breadcrumb %}
+        {{ breadcrumb }}
+    {% else %}
+        {{ title }}
+    {% endif %}
 {% endblock %}
 
 
@@ -38,7 +42,7 @@
                                     <div class="product-info text-left">
                                         <h3 class="name"><a href="{{ item.url }}" target="_blank">{{ item.brand_name }}</a></h3>
                                         <h3 class="name"><a href="{{ item.url }}" target="_blank">{{ item.goods_name }}</a></h3>
-                                        <div class="small-ratings">{% for i in item.stars|times %}<i class="fa fa-star rating-color"></i>{% endfor %} ({{ item.b_count }})</div>
+                                        <div class="small-ratings">{% for i in item.stars|times %}<i class="fa fa-star rating-color"></i>{% endfor %} (Покупок: {{ item.b_count }})</div>
                                         <div class="description">{{ item.updated_time | date:"d-m H:i:s" }}</div>
                                         <div class="description">{{ item.updated_time | timeuntil }}</div>
                                         <div class="product-price"><span class="price"> {{ item.price_now }} руб </span>
