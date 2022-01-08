@@ -45,18 +45,22 @@ class WildBerries:
                 self.cursor.execute(
                     f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, PRICE_MIN={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ITEM_ID={item_id}")
                 self.conn.commit()
-                if flag:
-                    self.notification(item_id, prcnt, brand_name, goods_name, img, url, price_now, price_prev,
+                if flag and b_count >= 5 and stars >= 4:
+                    if (0 < price_now <= 500 and prcnt > self.p1) or (501 < price_now <= 1000 and prcnt > self.p2) or (
+                            1001 < price_now and prcnt > self.p3):
+                        self.notification(item_id, prcnt, brand_name, goods_name, img, url, price_now, price_prev,
                                       min_price,
                                       max_price, b_count, stars)
             elif price_now < price_prev and price_now >= min_price:
                 self.cursor.execute(
                     f"UPDATE {self.base_name} SET PRICE_NOW={price_now}, BRAND_NAME='{brand_name}', GOODS_NAME='{goods_name}', IMG='{img}', URL='{url}', TIMER={ceil(time.time())} WHERE ITEM_ID={item_id}")
                 self.conn.commit()
-                if flag and (ceil(time.time()) - timer) > 864000:
-                    self.notification(item_id, prcnt, brand_name, goods_name, img, url, price_now, price_prev,
-                                      min_price,
-                                      max_price, b_count, stars)
+                if flag and (ceil(time.time()) - timer) > 864000 and b_count >= 5 and stars >= 4:
+                    if (0 < price_now <= 500 and prcnt > self.p1) or (501 < price_now <= 1000 and prcnt > self.p2) or (
+                            1001 < price_now and prcnt > self.p3):
+                        self.notification(item_id, prcnt, brand_name, goods_name, img, url, price_now, price_prev,
+                                          min_price,
+                                          max_price, b_count, stars)
             elif price_now > price_prev:
                 if price_now > max_price:
                     self.cursor.execute(f"UPDATE {self.base_name} SET PRICE_MAX={price_now} WHERE ITEM_ID={item_id}")
@@ -78,24 +82,22 @@ class WildBerries:
                      max_price,
                      b_count,
                      stars):
-        if (0 < price_now <= 500 and prcnt > self.p1) or (501 < price_now <= 1000 and prcnt > self.p2) or (
-                1001 < price_now and prcnt > self.p3):
-            print(f'Товар:  {brand_name} / {goods_name} уменьшился в цене c {price_prev} до {price_now} (-{prcnt}%)')
-            print(f'Ссылка: {url}')
-            print(f'Картинка: {img}')
-            requests.get(f'https://api.telegram.org/bot{self.api_token}/sendMessage', params=dict(
-                parse_mode='HTML',
-                chat_id=self.chat_name,
-                text=f'{self.company_name}\n<a href="{img}">&#8205;</a>\n'
-                     f'<a href="{url}">{brand_name} / {goods_name}</a>\n\n'
-                     f'{price_prev}р -> {price_now}р <b>(-{prcnt}%)</b>\n\n'
-                     f'Амплитуда: от {min_price}р до {max_price}р\n\n'
-                     f'{emoji.emojize(":full_moon:") * stars}{emoji.emojize(":new_moon:") * (5 - stars)} {b_count}'))
-            try:
-                add_on_site(item_id, brand_name, goods_name, img, url, price_now, price_prev, min_price, max_price,
-                        b_count, stars, self.company_name, self.product_type, self.product_type_name)
-            except:
-                print('Ошибка SQL. Запрос не выполнен.')
+        print(f'Товар:  {brand_name} / {goods_name} уменьшился в цене c {price_prev} до {price_now} (-{prcnt}%)')
+        print(f'Ссылка: {url}')
+        print(f'Картинка: {img}')
+        requests.get(f'https://api.telegram.org/bot{self.api_token}/sendMessage', params=dict(
+            parse_mode='HTML',
+            chat_id=self.chat_name,
+            text=f'{self.company_name}\n<a href="{img}">&#8205;</a>\n'
+                 f'<a href="{url}">{brand_name} / {goods_name}</a>\n\n'
+                 f'{price_prev}р -> {price_now}р <b>(-{prcnt}%)</b>\n\n'
+                 f'Амплитуда: от {min_price}р до {max_price}р\n\n'
+                 f'{emoji.emojize(":full_moon:") * stars}{emoji.emojize(":new_moon:") * (5 - stars)} {b_count}'))
+        try:
+            add_on_site(item_id, brand_name, goods_name, img, url, price_now, price_prev, min_price, max_price,
+                    b_count, stars, self.company_name, self.product_type, self.product_type_name)
+        except:
+            print('Ошибка SQL. Запрос не выполнен.')
 
 
     def get_data_100(self, lnk):

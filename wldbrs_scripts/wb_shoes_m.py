@@ -12,12 +12,12 @@ wb_shoes_m = WildBerries(
     40,
     35,
     35,
-    ['https://www.wildberries.ru/catalog/obuv/muzhskaya/botinki-i-polubotinki?sort=popular&page=1',
-     'https://www.wildberries.ru/catalog/obuv/muzhskaya/kedy-i-krossovki?sort=popular&page=1',
-     'https://www.wildberries.ru/catalog/obuv/muzhskaya/mokasiny-i-topsaydery?sort=popular&page=1',
-     'https://www.wildberries.ru/catalog/obuv/muzhskaya/sapogi-i-unty?sort=popular&page=1',
-     'https://www.wildberries.ru/catalog/obuv/muzhskaya/tapochki?sort=popular&page=1',
-     'https://www.wildberries.ru/catalog/obuv/muzhskaya/tufli-lofery?sort=popular&page=1',
-     'https://www.wildberries.ru/catalog/obuv/muzhskaya/shlepantsy-i-akvasoki?sort=popular&page=1'])
+    ['https://www.wildberries.ru/catalog/obuv/muzhskaya/botinki-i-polubotinki?sort=rate&page=1',
+     'https://www.wildberries.ru/catalog/obuv/muzhskaya/kedy-i-krossovki?sort=rate&page=1',
+     'https://www.wildberries.ru/catalog/obuv/muzhskaya/mokasiny-i-topsaydery?sort=rate&page=1',
+     'https://www.wildberries.ru/catalog/obuv/muzhskaya/sapogi-i-unty?sort=rate&page=1',
+     'https://www.wildberries.ru/catalog/obuv/muzhskaya/tapochki?sort=rate&page=1',
+     'https://www.wildberries.ru/catalog/obuv/muzhskaya/tufli-lofery?sort=rate&page=1',
+     'https://www.wildberries.ru/catalog/obuv/muzhskaya/shlepantsy-i-akvasoki?sort=rate&page=1'])
 
 wb_shoes_m.start()
